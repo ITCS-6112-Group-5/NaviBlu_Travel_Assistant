@@ -1,0 +1,5 @@
+amadeus
+fast_flights
+groq
+python-dotenv
+streamlit

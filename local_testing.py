@@ -15,7 +15,7 @@ def main():
         print("\n🚀 Starting Streamlit App...")
         print("📍 URL: http://localhost:8501")
         print("⚠️  Press Ctrl+C to stop\n")
-        os.system('streamlit run chatbot/streamlit_app.py')
+        os.system('streamlit run chatbot/app.py')
         
     elif choice == "2":
         print("\n🌐 Starting Static Website Server...")

@@ -89,8 +89,17 @@ Visit http://localhost:8000
 
 ## Deployment
 
-### Streamlit App
-The chatbot is deployed on **Streamlit Community Cloud**. Any updates to files in the `chatbot/` folder will automatically redeploy.
+### Streamlit App (Hugging Face Spaces)
+The chatbot is deployed on **Hugging Face Spaces** using Docker (required as of April 2025).
+
+All deployment files are in the `chatbot/` folder, including the Dockerfile.
+
+See [`chatbot/DEPLOYMENT.md`](chatbot/DEPLOYMENT.md) for detailed deployment instructions.
+
+**Quick Summary**: 
+1. Create a new Space with **Docker SDK**
+2. Upload all files from `chatbot/` folder
+3. Add your API keys as Secrets in Settings
 
 ### Static Website (GitHub Pages)
 
@@ -130,18 +139,27 @@ The embedded Streamlit app will load automatically from Streamlit Community Clou
 
 ```
 NaviBlu_Travel_Assistant/
-├── chatbot/                  # Chatbot module
+├── chatbot/                  # 🤖 Chatbot Module (deployable to HF Spaces)
 │   ├── __init__.py          # Module initialization
+│   ├── app.py               # Streamlit entry point
 │   ├── core.py              # Core chatbot logic with agent system
-│   └── streamlit_app.py     # Streamlit UI (deployed to cloud)
-├── images/                   # Website images (logo and travel photos)
-├── index.html                # Main website page with embedded Streamlit
-├── styles.css                # Website styling
-├── scripts.js                # Slideshow and animations
-├── local_testing.py          # Local testing launcher
-├── requirements.txt          # Python dependencies
-├── .env                      # API keys (create this)
-└── testing_files/           # Jupyter notebooks for development
+│   ├── Dockerfile           # Docker config for HF Spaces
+│   ├── README.md            # HF Space metadata (YAML frontmatter)
+│   ├── requirements.txt     # Python dependencies
+│   ├── packages.txt         # System dependencies
+│   ├── DEPLOYMENT.md        # Deployment guide
+│   └── .streamlit/
+│       └── config.toml      # Theme and server settings
+├── .github/workflows/        # 🔄 GitHub Actions
+│   └── deploy-huggingface.yml  # Auto-deploy to HF Spaces
+├── images/                   # 🖼️  Website images
+├── index.html                # 🌐 Main website page
+├── styles.css                # 🎨 Website styling
+├── scripts.js                # ⚡ Slideshow and animations
+├── local_testing.py          # 🧪 Local testing launcher
+├── requirements.txt          # Python dependencies (local dev)
+├── .env                      # 🔑 API keys (gitignored)
+└── testing_files/           # 📓 Jupyter notebooks
 ```
 
 <br>

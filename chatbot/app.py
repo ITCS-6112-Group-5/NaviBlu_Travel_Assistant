@@ -1,11 +1,10 @@
-# Script for frontend Streamlit Chatbot UI
-
+# Hugging Face Space Entry Point for NaviBlu Travel Assistant
 
 import streamlit as st
 import os
-from .core import Chatbot
-
+from core import Chatbot
 from dotenv import load_dotenv
+
 load_dotenv()
 
 
@@ -19,9 +18,7 @@ if "chatbot" not in st.session_state or st.session_state.chatbot is None:
     st.session_state.chatbot = Chatbot()
 
 
-
-
-# Streamlit ------------------------------------------------------------------------------
+# Streamlit App ----------------------------------------------------------------------
 
 st.title("NaviBlu Travel Assistant")
 

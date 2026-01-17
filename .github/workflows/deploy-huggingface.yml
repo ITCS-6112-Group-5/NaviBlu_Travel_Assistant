@@ -1,0 +1,44 @@
+# Automatically deploy chatbot folder to Hugging Face Spaces
+# Triggers when files in chatbot/ are changed on main branch
+
+name: Deploy to Hugging Face Spaces
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'chatbot/**'  # Only trigger when chatbot folder changes
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push chatbot folder to Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          # Configure git
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          
+          # Clone the HF Space repo
+          git clone https://user:$HF_TOKEN@huggingface.co/spaces/${{ secrets.HF_SPACE_NAME }} hf-space
+          
+          # Remove old files (except .git)
+          cd hf-space
+          find . -maxdepth 1 ! -name '.git' ! -name '.' -exec rm -rf {} +
+          
+          # Copy chatbot folder contents
+          cp -r ../chatbot/* .
+          
+          # Commit and push
+          git add .
+          git diff --staged --quiet || git commit -m "Auto-deploy from GitHub: ${{ github.sha }}"
+          git push
