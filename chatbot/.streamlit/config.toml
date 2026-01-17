@@ -1,9 +1,9 @@
 [theme]
+base = "dark"
 primaryColor = "#1e6091"
 
 [server]
 headless = true
-enableCORS = false
 port = 8501
 address = "0.0.0.0"
 

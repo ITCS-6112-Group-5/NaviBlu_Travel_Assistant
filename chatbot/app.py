@@ -7,6 +7,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Avatar settings
+USER_AVATAR = "👤"
+ASSISTANT_AVATAR = "✈️"  # Travel-themed blue airplane
 
 # Initialize chat history in streamlit session state
 if "messages" not in st.session_state or st.session_state.messages is None:
@@ -24,18 +27,19 @@ st.title("NaviBlu Travel Assistant")
 
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
+    avatar = USER_AVATAR if message["role"] == "user" else ASSISTANT_AVATAR
+    with st.chat_message(message["role"], avatar=avatar):
         st.markdown(message["content"])
 
 # Accept user input
 if prompt := st.chat_input("Type Here"):
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    with st.chat_message("user"):
+    with st.chat_message("user", avatar=USER_AVATAR):
         # Display user query in UI
         st.markdown(prompt)
 
-    with st.chat_message("assistant"):
+    with st.chat_message("assistant", avatar=ASSISTANT_AVATAR):
 
         # Call shared chatbot logic
         response = st.session_state.chatbot.process_input(prompt) # type: ignore
