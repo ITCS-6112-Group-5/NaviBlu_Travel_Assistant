@@ -35,8 +35,8 @@ jobs:
           cd hf-space
           find . -maxdepth 1 ! -name '.git' ! -name '.' -exec rm -rf {} +
           
-          # Copy chatbot folder contents
-          cp -r ../chatbot/* .
+          # Copy chatbot folder contents (including hidden files like .streamlit)
+          cp -r ../chatbot/. .
           
           # Commit and push
           git add .

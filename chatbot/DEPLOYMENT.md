@@ -24,7 +24,7 @@ chatbot/
 ├── Dockerfile           # Docker configuration (required)
 ├── README.md            # HF Space metadata (YAML frontmatter)
 ├── requirements.txt     # Python dependencies
-├── packages.txt         # System dependencies (apt-get)
+├── .streamlit/          # Streamlit configuration
 ├── DEPLOYMENT.md        # This guide
 └── .streamlit/
     └── config.toml      # Streamlit configuration
@@ -55,7 +55,7 @@ chatbot/
    - `Dockerfile`
    - `README.md`
    - `requirements.txt`
-   - `packages.txt`
+   - `.streamlit/config.toml`
    - `.streamlit/config.toml` (create the folder structure)
 4. Commit the files
 

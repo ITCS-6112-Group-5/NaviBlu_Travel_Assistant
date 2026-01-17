@@ -50,7 +50,7 @@ Create a virtual environment and install dependencies:
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
+pip install -r chatbot/requirements.txt
 ```
 
 <br>
@@ -146,7 +146,6 @@ NaviBlu_Travel_Assistant/
 │   ├── Dockerfile           # Docker config for HF Spaces
 │   ├── README.md            # HF Space metadata (YAML frontmatter)
 │   ├── requirements.txt     # Python dependencies
-│   ├── packages.txt         # System dependencies
 │   ├── DEPLOYMENT.md        # Deployment guide
 │   └── .streamlit/
 │       └── config.toml      # Theme and server settings
@@ -157,7 +156,8 @@ NaviBlu_Travel_Assistant/
 ├── styles.css                # 🎨 Website styling
 ├── scripts.js                # ⚡ Slideshow and animations
 ├── local_testing.py          # 🧪 Local testing launcher
-├── requirements.txt          # Python dependencies (local dev)
+├── .python-version           # Python version (3.12)
+├── .env.example              # 🔑 Example environment variables
 ├── .env                      # 🔑 API keys (gitignored)
 └── testing_files/           # 📓 Jupyter notebooks
 ```

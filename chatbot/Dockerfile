@@ -4,10 +4,9 @@ FROM python:3.12-slim
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies (filter out comments and empty lines)
-COPY packages.txt .
+# Install system dependencies
 RUN apt-get update && \
-    grep -v '^#' packages.txt | grep -v '^$' | xargs -r apt-get install -y && \
+    apt-get install -y curl && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies

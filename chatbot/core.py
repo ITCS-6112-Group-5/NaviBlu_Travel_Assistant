@@ -277,8 +277,9 @@ class Chatbot():
                 adults = search_info_json.get("numGuests")
             )
             num_hotels = len(hotel_offers.data)
-        except:
-            return "Unable to find that match the search criteria."
+        except Exception as e:
+            print(f"Hotel search error: {e}")
+            return "Unable to find hotels matching the search criteria."
 
 
 
@@ -321,8 +322,8 @@ class Chatbot():
                             output.append(f"Price: {offer.get("price").get("currency")} base: ${offer.get("price").get("base")} total: ${offer.get("price").get("total")}")
                             output.append(f"Average Price per night ${offer.get("price").get("variations").get("average").get("base")}")
                             output.append(f"Description: {offer.get("room").get("description").get("text")}")
-            except:
-                print("Invalid Hotel Info")
+            except Exception as e:
+                print(f"Error parsing hotel info: {e}")
 
         
         output.append("")
