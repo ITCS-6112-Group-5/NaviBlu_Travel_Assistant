@@ -8,6 +8,4 @@ __pycache__/
 *.pyd
 .Python
 *.so
-.coverage
 .pytest_cache/
-testing_files/

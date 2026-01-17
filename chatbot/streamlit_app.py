@@ -1,9 +1,9 @@
-# Script for the Streamlit Chatbot UI
+# Script for frontend Streamlit Chatbot UI
 
 
 import streamlit as st
 import os
-from chatbot_core import Chatbot
+from .core import Chatbot
 
 from dotenv import load_dotenv
 load_dotenv()

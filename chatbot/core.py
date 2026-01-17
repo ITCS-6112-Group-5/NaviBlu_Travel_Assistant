@@ -1,5 +1,4 @@
-# Shared Chatbot logic for both Streamlit App and Website Dev
-
+# Core backend chatbot logic with agent-based architecture
 
 import os
 import json
@@ -374,4 +373,3 @@ class Chatbot():
         )
 
         return completion.choices[0].message.content
-    

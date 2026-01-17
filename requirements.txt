@@ -1,6 +1,5 @@
 amadeus
 fast_flights
-flask
 groq
 python-dotenv
 streamlit
