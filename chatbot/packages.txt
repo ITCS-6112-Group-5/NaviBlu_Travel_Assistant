@@ -1,2 +1,1 @@
-# System packages required for the app (installed via apt-get)
 curl
