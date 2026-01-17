@@ -7,6 +7,36 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Page config - must be first Streamlit command
+st.set_page_config(
+    page_title="NaviBlu Travel Assistant",
+    page_icon="✈️",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
+
+# Custom CSS to reduce top padding
+st.markdown("""
+    <style>
+    /* Reduce top padding */
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+    
+    /* Reduce header spacing */
+    header {
+        padding-top: 0rem;
+    }
+    
+    /* Adjust title spacing */
+    h1 {
+        padding-top: 0rem;
+        margin-top: 0rem;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # Avatar settings
 USER_AVATAR = "👤"
 ASSISTANT_AVATAR = "✈️"  # Travel-themed blue airplane
@@ -24,6 +54,7 @@ if "chatbot" not in st.session_state or st.session_state.chatbot is None:
 # Streamlit App ----------------------------------------------------------------------
 
 st.title("NaviBlu Travel Assistant")
+st.write("Ask questions about flights, hotels, and travel destinations!")
 
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:

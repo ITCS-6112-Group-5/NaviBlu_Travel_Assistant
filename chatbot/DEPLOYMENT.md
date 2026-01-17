@@ -2,33 +2,14 @@
 
 This guide explains how to deploy the NaviBlu chatbot to Hugging Face Spaces.
 
-> ⚠️ **Note**: As of April 2025, Hugging Face deprecated the built-in Streamlit SDK. Streamlit apps now require Docker. This folder is already configured for Docker deployment.
 
 ## Prerequisites
 
 1. **Hugging Face Account**: Sign up at https://huggingface.co/
-2. **API Keys**: You'll need these as Secrets in your Space:
+2. **API Keys**: You'll need to add these as Secrets in your Space:
    - `GROQ_API_KEY`
    - `AMADEUS_API_KEY`
    - `AMADEUS_API_SECRET`
-
-## Files in This Folder
-
-All files needed for Hugging Face Spaces deployment:
-
-```
-chatbot/
-├── app.py               # Streamlit entry point
-├── core.py              # Core chatbot logic
-├── __init__.py          # Module initialization
-├── Dockerfile           # Docker configuration (required)
-├── README.md            # HF Space metadata (YAML frontmatter)
-├── requirements.txt     # Python dependencies
-├── .streamlit/          # Streamlit configuration
-├── DEPLOYMENT.md        # This guide
-└── .streamlit/
-    └── config.toml      # Streamlit configuration
-```
 
 ## Deployment Steps
 
@@ -37,49 +18,13 @@ chatbot/
 1. Go to https://huggingface.co/new-space
 2. Configure:
    - **Space name**: `naviblu-travel-assistant` (or your choice)
-   - **License**: MIT (or your preference)
-   - **SDK**: Select **Docker**
+   - **SDK**: Select **Docker** - **Streamlit**
    - **Hardware**: **CPU basic** (free tier is sufficient)
-3. Click **Create Space**
+3. **Create Space**
 
-### Step 2: Deploy the Chatbot Folder
 
-**Option A: Upload via Web Interface (Easiest)**
 
-1. In your new Space, click **Files** tab
-2. Click **Add file** → **Upload files**
-3. Upload ALL files from this `chatbot/` folder:
-   - `app.py`
-   - `core.py`
-   - `__init__.py`
-   - `Dockerfile`
-   - `README.md`
-   - `requirements.txt`
-   - `.streamlit/config.toml`
-   - `.streamlit/config.toml` (create the folder structure)
-4. Commit the files
-
-**Option B: Git Push**
-
-1. Clone your new Space:
-   ```bash
-   git clone https://huggingface.co/spaces/YOUR-USERNAME/naviblu-travel-assistant
-   cd naviblu-travel-assistant
-   ```
-
-2. Copy files from the chatbot folder:
-   ```bash
-   cp -r /path/to/NaviBlu_Travel_Assistant/chatbot/* .
-   ```
-
-3. Push to Hugging Face:
-   ```bash
-   git add .
-   git commit -m "Deploy NaviBlu chatbot"
-   git push
-   ```
-
-### Step 3: Add API Keys as Secrets
+### Step 2: Add API Keys as Secrets
 
 1. In your Space, go to **Settings** → **Repository secrets**
 2. Add the following secrets:
@@ -87,134 +32,123 @@ chatbot/
    - **Name**: `AMADEUS_API_KEY`, **Value**: Your Amadeus API key
    - **Name**: `AMADEUS_API_SECRET`, **Value**: Your Amadeus API secret
 
-### Step 4: Wait for Build
+### Step 3: Wait for Build
 
-The Space will build the Docker image and start (typically 3-7 minutes for first build). Monitor progress in the **App** tab or **Logs**.
+The Space will build the Docker image and start. 
 
-### Step 5: Test Your Space
+### Step 4: Test Your Space
 
 Your chatbot will be live at:
 ```
 https://huggingface.co/spaces/YOUR-USERNAME/naviblu-travel-assistant
 ```
 
-## Embedding in Website
-
-To embed in your website (`index.html`), update the iframe URL:
-
-```html
-<iframe src="https://YOUR-USERNAME-naviblu-travel-assistant.hf.space" 
-        class="streamlit-iframe" 
-        title="NaviBlu Travel Assistant">
-</iframe>
-```
 
 **Note**: The embed URL format for Docker Spaces is `https://USERNAME-SPACENAME.hf.space`
 
-## Understanding the Docker Setup
 
-### Dockerfile Explained
+## Updating the Space via GitHub Actions
 
-```dockerfile
-FROM python:3.11-slim          # Base Python image
-WORKDIR /app                   # Set working directory
-COPY requirements.txt .        # Copy dependencies
-RUN pip install ...            # Install Python packages
-COPY . .                       # Copy all app files
-RUN useradd -m -u 1000 user   # Create non-root user (HF requirement)
-USER user                      # Switch to non-root user
-EXPOSE 8501                    # Expose Streamlit port
-CMD ["streamlit", "run", ...]  # Start command
-```
+The project includes a GitHub Actions workflow (`.github/workflows/deploy-huggingface.yml`) that **automatically deploys** the chatbot to Hugging Face whenever you push changes to the `chatbot/` folder.
 
-### README.md YAML Frontmatter
+#### How It Works
 
+**Trigger Conditions:**
 ```yaml
----
-title: NaviBlu Travel Assistant
-sdk: docker              # Required for Streamlit now
-app_port: 8501           # Streamlit's default port
----
+on:
+  push:
+    branches: [main]
+    paths: ['chatbot/**']  # Only triggers on chatbot folder changes
+  workflow_dispatch:        # Can also trigger manually
 ```
 
-## Troubleshooting
+**What Happens During Deployment:**
 
-### Build Fails
+1. **GitHub Actions detects** a push to `main` that modified files in `chatbot/`
+2. **Checks out** your repository code
+3. **Authenticates** with Hugging Face using your `HF_TOKEN`
+4. **Clones** your Hugging Face Space repository
+5. **Removes** old files (keeps `.git` folder)
+6. **Copies** all files from `chatbot/` folder (including hidden files like `.streamlit/`)
+7. **Commits** changes with message: `"Auto-deploy from GitHub: [commit-sha]"`
+8. **Pushes** to Hugging Face, triggering a Space rebuild
 
-- Check **Logs** in the App tab for error messages
-- Verify Dockerfile syntax is correct
-- Ensure all files are uploaded (especially `requirements.txt`)
+**Files Copied:**
+- `app.py`, `core.py`, `__init__.py`
+- `Dockerfile`, `README.md`, `requirements.txt`
+- `.streamlit/config.toml` (hidden folder included!)
 
-### App Stuck on "Starting"
+#### One-Time Setup
 
-- Make sure `app_port: 8501` is in README.md frontmatter
-- Verify Streamlit is configured to run on `0.0.0.0:8501`
-- Check that Dockerfile exposes port 8501
+**Step 1: Get Your Hugging Face Token**
+1. Go to https://huggingface.co/settings/tokens
+2. Click **New token**
+3. Name: `GitHub Actions Deploy`
+4. Type: **Write** (needs write access to push to Space)
+5. Copy the token (you won't see it again!)
 
-### Import Errors
+**Step 2: Add GitHub Secrets**
+1. Go to your GitHub repository
+2. Navigate to **Settings** → **Secrets and variables** → **Actions**
+3. Click **New repository secret**
+4. Add **two secrets**:
 
-- Ensure `core.py` and `__init__.py` are uploaded
-- Check that `app.py` imports use `from core import Chatbot` (not relative)
+| Secret Name | Value | Example |
+|-------------|-------|---------|
+| `HF_TOKEN` | Your Hugging Face token | `hf_xxxxxxxxxxxxx` |
+| `HF_SPACE_NAME` | Your Space path | `cameron-d/NaviBlu_Travel_Assistant` |
 
-### API Errors
+**Step 3: Test the Workflow**
 
-- Verify secrets are named exactly as expected (case-sensitive)
-- Test API keys independently to ensure they're valid
-
-### Permission Errors
-
-- The Dockerfile creates a non-root user - this is required by HF
-- Make sure you're not trying to write to system directories
-
-## Updating the Space
-
-### Option A: Automatic via GitHub Actions (Recommended)
-
-If you set up the GitHub Actions workflow, simply push changes to the `chatbot/` folder on GitHub - it will automatically deploy to Hugging Face!
-
-**One-time setup:**
-1. Go to your GitHub repo → **Settings** → **Secrets and variables** → **Actions**
-2. Add these secrets:
-   - `HF_TOKEN`: Your Hugging Face access token (from https://huggingface.co/settings/tokens)
-   - `HF_SPACE_NAME`: Your Space path (e.g., `your-username/naviblu-travel-assistant`)
-
-Then every push to `chatbot/` will auto-deploy!
-
-### Option B: Manual Push
-
+Make a change to any file in `chatbot/`, commit, and push:
 ```bash
-# After making changes locally
-cd your-space-clone
-cp -r /path/to/chatbot/* .
-git add .
-git commit -m "Update chatbot"
-git push
+# Example: Update a comment in chatbot/app.py
+git add chatbot/
+git commit -m "Test auto-deploy"
+git push origin main
 ```
 
-### Option C: Web Upload
+Watch the deployment:
+- GitHub: **Actions** tab → See workflow run
+- Hugging Face: Your Space → **Settings** → See new commit appear
 
-Upload updated files through the Hugging Face web interface.
+#### Manual Trigger
 
-## Cost
+You can also trigger deployment manually (without pushing code):
 
-- **CPU basic**: Free (sufficient for this chatbot)
-- **CPU upgrade**: ~$0.50/hour
-- **GPU**: Starting at ~$0.60/hour (not needed)
+1. Go to GitHub → **Actions** tab
+2. Select **Deploy to Hugging Face Spaces** workflow
+3. Click **Run workflow** → Choose branch → **Run**
 
-## Why Hugging Face Spaces?
+This is useful for re-deploying without code changes.
 
-✅ **Free tier** with good resources  
-✅ **Automatic HTTPS** and domain  
-✅ **Easy secrets management** for API keys  
-✅ **Git-based deployment**  
-✅ **Docker support** for full control  
-✅ **Good uptime** and reliability  
-✅ **Embed-friendly** for websites  
 
-## Next Steps
+#### What Gets Deployed
 
-1. ✅ Deploy chatbot to Hugging Face Spaces
-2. ✅ Test the Space URL directly
-3. ✅ Update `index.html` with new embed URL
-4. ✅ Deploy website to GitHub Pages
-5. ✅ Test the fully integrated experience
+✅ **Included:**
+- All Python files (`*.py`)
+- Docker configuration (`Dockerfile`)
+- Requirements (`requirements.txt`)
+- Space metadata (`README.md`)
+- Hidden folders (`.streamlit/`)
+- All subdirectories
+
+❌ **Excluded:**
+- Git history (only `.git` folder from HF Space is kept)
+- Files outside `chatbot/` folder
+
+#### Viewing Deployment Status
+
+**In GitHub:**
+1. Go to **Actions** tab
+2. Click on the latest workflow run
+3. Expand steps to see:
+   - ✅ Checkout code
+   - ✅ Push to HF Space
+   - ⏱️ Deployment logs
+
+**In Hugging Face:**
+1. Go to your Space
+2. Check **Settings** → Recent commits
+3. Look for: `Auto-deploy from GitHub: [sha]`
+4. **App** tab → Monitor rebuild progress

@@ -13,7 +13,7 @@ license: mit
 
 AI-powered travel chatbot that helps you find flights, hotels, and discover destinations.
 
-Built with Streamlit and powered by Meta's Llama 3.3 70B model via Groq.
+Powered by Meta's Llama 3.3 70B model and realtime flight / hotel APIs.
 
 ## Features
 
@@ -38,5 +38,6 @@ This Space requires the following secrets to be configured:
 
 ## Credits
 
-**ITCS 6112 - Group 5**  
+**UNC Charlotte - ITCS 6112 - Software System Design and Implementation**
+**Group 5**  
 Cameron Detig • Juan Rojas • Evelyn Hosana • Varsha Chintalapati
