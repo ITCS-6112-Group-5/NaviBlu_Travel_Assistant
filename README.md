@@ -2,12 +2,14 @@
 
 AI chatbot to provide flight and hotel options as well as general travel information.
 
+Available here: https://itcs-6112-group-5.github.io/NaviBlu_Travel_Assistant/
+
 Built on top of Meta's llama-3.3-70b.
 
 The Streamlit app is hosted on Streamlit Community Cloud and embedded in a custom website.
 
-<img src="website/images/For_Readme_1.png" alt="Logo" style="width: 80%;"/>
-<img src="website/images/For_Readme_2.png" alt="Logo" style="width: 80%;"/>
+<img src="images/For_Readme_1.png" alt="Logo" style="width: 80%;"/>
+<img src="images/For_Readme_2.png" alt="Logo" style="width: 80%;"/>
 
 <br>
 
