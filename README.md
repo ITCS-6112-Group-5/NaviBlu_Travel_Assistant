@@ -51,7 +51,7 @@ Cameron Detig • Juan Rojas • Evelyn Hosana • Varsha Chintalapati
 - **Chatbot Module** (`chatbot/`):
   - `core.py`: Agent-based system for flights, hotels, locations, and general info
   - `streamlit_app.py`: Frontend streamlit chat interface.
-- **Static Website** (root files): Landing page with embedded Streamlit app via iframe
+- **Website** (root files): Landing page with embedded Streamlit app via iframe
   - `index.html`, `styles.css`, `scripts.js`, `images/`
 
 <br>

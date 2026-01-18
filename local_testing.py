@@ -25,24 +25,24 @@ def main():
     if choice == "1":
         # Check if dependencies are installed
         if not check_streamlit_installed():
-            print("\n⚠️  Streamlit is not installed!")
+            print("\nWarning: Streamlit is not installed!")
             print("Install dependencies first:")
             print(f"  pip install -r chatbot/requirements.txt")
             print("\nThen run this script again.")
             return
         
-        print("\n🚀 Starting Streamlit App...")
-        print("📍 URL: http://localhost:8501")
-        print("⚠️  Press Ctrl+C to stop\n")
+        print("\nStarting Streamlit App...")
+        print("URL: http://localhost:8501")
+        print("Press Ctrl+C to stop\n")
         
         # Use python -m streamlit for better compatibility
         os.system(f'{sys.executable} -m streamlit run chatbot/app.py')
         
     elif choice == "2":
-        print("\n🌐 Starting Static Website Server...")
-        print("📍 URL: http://localhost:8000")
-        print("💡 The embedded Streamlit app will load from Hugging Face Space")
-        print("⚠️  Press Ctrl+C to stop\n")
+        print("\nStarting Static Website Server...")
+        print("URL: http://localhost:8000")
+        print("The embedded Streamlit app will load from Hugging Face Space")
+        print("Press Ctrl+C to stop\n")
         
         PORT = 8000
         
@@ -52,7 +52,7 @@ def main():
             httpd.serve_forever()
             
     else:
-        print("❌ Invalid choice. Please enter 1 or 2.")
+        print("Invalid choice. Please enter 1 or 2.")
 
 if __name__ == "__main__":
     main()
