@@ -32,8 +32,6 @@ class Chatbot():
                                                 You can also provide information about tourist attractions and activities at a location, as well as answer any general queries the user may have.
                                                 You can also provide general information about travel and destinations."""}
                             ]
-        # seperate history to store just the user's messages
-        self.user_message_history = []
 
         self.flight_info = ""
         self.hotel_info = ""
@@ -60,7 +58,6 @@ class Chatbot():
 
         # Add to chat history
         self.chat_history.append({"role": "user", "content": str(self.input_prompt)})
-        self.user_message_history.append({"role": "user", "content": str(self.input_prompt)})
         
         # make seperate chat history just for this process
         process_input_history = [{
@@ -115,7 +112,6 @@ class Chatbot():
 
         categories = str(completion.choices[0].message.content).strip().lower()
         print(f"---User Query Categories: {categories}---")
-        self.user_message_history.append({"role": "assistant", "content": str(categories)}) # Add what agents were called for each query
 
         # Parse categories - only trigger agents if the category word appears as a standalone term
         categories_list = [cat.strip() for cat in categories.split(',')]
@@ -148,8 +144,8 @@ class Chatbot():
 
         print("Running flight agent.")
 
-        flight_info_prompt = f"""Use this user message history to extract the flight information the user is currently looking for: 
-                user message history: {self.user_message_history}
+        flight_info_prompt = f"""Use this chat history to extract the flight information the user is currently looking for: 
+                chat history: {self.chat_history}
                 format your response as a json exactly structured like below and nothing else. If you can't find information for a section, make an educated guess based on the message history. 
                 If needed, today's date is {self.todays_date}.
 
@@ -199,7 +195,7 @@ class Chatbot():
             output.append("⚠️ **Unable to retrieve flight information at this time.**")
             output.append("")
             output.append("The flight search service may be temporarily unavailable.")
-            output.append("Please try again later or search directly on [Google Flights](https://www.google.com/travel/flights).")
+            output.append("Please try again later.")
             
             output_string = ""                  
             for line in output:
@@ -260,8 +256,8 @@ class Chatbot():
 
         print("Running hotel agent.\n")
 
-        prompt = f"""Use this user message history to extract the hotel information the user is currently looking for: 
-                user message history: {self.user_message_history}
+        prompt = f"""Use this chat history to extract the hotel information the user is currently looking for: 
+                chat history: {self.chat_history}
                 format your response as a json exactly structured like below and nothing else. If you can't find information for a section, make an educated guess based on the message history. 
                 If needed, today's date is {self.todays_date}.
 
@@ -306,7 +302,7 @@ class Chatbot():
             output.append("⚠️ **Unable to retrieve hotel information at this time.**")
             output.append("")
             output.append("The hotel search service may be temporarily unavailable or the API credentials need to be verified.")
-            output.append("Please try again later or search on [Booking.com](https://www.booking.com) or [Hotels.com](https://www.hotels.com).")
+            output.append("Please try again later.")
             output.append("")
             output.append("---")
 
@@ -325,7 +321,7 @@ class Chatbot():
         
         output = ["### Hotel Search Parameters"]
         output.append(f"**Check-In:** {hotels_to_display[0].get("offers")[0].get("checkInDate")} | **Check-Out:** {hotels_to_display[0].get("offers")[0].get("checkOutDate")}") # type: ignore
-        output.append(f"**City:** {search_info_json.get("city")}")
+        output.append(f"**City:** {search_info_json.get("city")}\n")
         output.append("---")
 
         guests_info = "**Guests:** "
@@ -341,7 +337,7 @@ class Chatbot():
                 output.append("---")
                 for key in hotel:
                     if key == "hotel":
-                        output.append(f"### 🏨 {hotel.get(key).get("name")}") # type: ignore
+                        output.append(f"### {hotel.get(key).get("name")}") # type: ignore
 
                     elif key == "available":
                         availability = "✅ Available" if hotel.get(key) else "❌ Not Available"
@@ -382,7 +378,17 @@ class Chatbot():
 
         print(response)
         print()
-        return response
+        
+        # Format response with header
+        output = ["### Location Information\n"]
+        output.append("---")
+        output.append(response)
+        
+        output_string = ""
+        for line in output:
+            output_string += str(line) + "  \n"
+        
+        return output_string
 
 
     def general_info_agent(self):
